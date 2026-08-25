@@ -286,7 +286,8 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 /* Hide broken-icon state for lazy-loaded images not yet swapped in */
-.col-thumb img.lazy {
+.col-thumb img.lazy,
+.gallery-card__thumb img[data-src] {
     opacity: 0;
 }
 
