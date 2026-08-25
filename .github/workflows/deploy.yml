@@ -1,0 +1,51 @@
+name: Deploy gallery.svaff.org
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via rsync
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GALLERY_SSH_PRIVATE_KEY }}
+          HOST: gallery.svaff.org
+          USER: svaff-gallery
+          DEPLOY_PATH: /home/svaff-gallery/htdocs/gallery.svaff.org
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          rsync -avz --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='assets/photos' \
+            --exclude='inc/cache' \
+            --exclude='shared' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./ "$USER@$HOST:$DEPLOY_PATH/"
+
+      - name: Copy shared inc (nav/head/footer)
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GALLERY_SSH_PRIVATE_KEY }}
+          HOST: gallery.svaff.org
+          USER: svaff-gallery
+          DEPLOY_PATH: /home/svaff-gallery/htdocs/gallery.svaff.org
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            "$USER@$HOST" \
+            "mkdir -p $DEPLOY_PATH/shared/inc && \
+             cp /home/svaff/svaff-shared/inc/head.php   $DEPLOY_PATH/shared/inc/ && \
+             cp /home/svaff/svaff-shared/inc/nav.php    $DEPLOY_PATH/shared/inc/ && \
+             cp /home/svaff/svaff-shared/inc/footer.php $DEPLOY_PATH/shared/inc/ && \
+             mkdir -p $DEPLOY_PATH/inc/cache && \
+             rm -f $DEPLOY_PATH/inc/cache/gallery_index.json && \
+             echo 'Deploy complete'"
