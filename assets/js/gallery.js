@@ -1,9 +1,37 @@
 /**
  * gallery.svaff.org — Gallery JS
- * Handles: lightbox open/close/nav, keyboard, touch swipe.
+ * Handles: lightbox open/close/nav, keyboard, touch swipe,
+ *          intersection-observer lazy loading for collection grids.
  */
 (function () {
     'use strict';
+
+    // ---- Intersection-observer lazy loading for col-thumb images ----
+    // The browser's native loading="lazy" doesn't trigger for items far
+    // below the fold. This observer loads them as they enter the viewport.
+    if ('IntersectionObserver' in window) {
+        const thumbObs = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    const img = entry.target.querySelector('img[data-src]');
+                    if (img) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    thumbObs.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: '400px' });
+
+        document.querySelectorAll('.col-thumb img[data-src]').forEach(function (img) {
+            thumbObs.observe(img.parentElement);
+        });
+    } else {
+        // Fallback: load all immediately
+        document.querySelectorAll('.col-thumb img[data-src]').forEach(function (img) {
+            img.src = img.dataset.src;
+        });
+    }
 
     // ---- Lightbox (collection page only) ----
     const lb       = document.getElementById('lb');

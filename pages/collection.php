@@ -80,6 +80,7 @@ require GALLERY_ROOT . '/shared/inc/nav.php';
     <section class="col-grid-section">
         <div class="col-grid">
             <?php foreach ($image_urls as $i => $url): ?>
+            <?php $eager = $i < 24; ?>
             <button
                 class="col-thumb"
                 aria-label="Open photo <?= $i + 1 ?> of <?= $total ?>"
@@ -88,9 +89,10 @@ require GALLERY_ROOT . '/shared/inc/nav.php';
                 type="button"
             >
                 <img
-                    src="<?= htmlspecialchars($url) ?>"
+                    <?= $eager ? 'src' : 'data-src' ?>="<?= htmlspecialchars($url) ?>"
+                    <?php if (!$eager): ?>src=""<?php endif; ?>
                     alt="<?= htmlspecialchars($col_label . ' photo ' . ($i + 1)) ?>"
-                    loading="lazy"
+                    loading="<?= $eager ? 'eager' : 'lazy' ?>"
                     decoding="async"
                 >
             </button>

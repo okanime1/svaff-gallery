@@ -56,7 +56,7 @@ require GALLERY_ROOT . '/shared/inc/nav.php';
                                 <img
                                     src="<?= htmlspecialchars($cover_url) ?>"
                                     alt="<?= htmlspecialchars($col['label'] . ' — ' . $photographer['label'] . ' ' . $year) ?>"
-                                    loading="lazy"
+                                    loading="eager"
                                     decoding="async"
                                 >
                                 <div class="gallery-card__overlay">

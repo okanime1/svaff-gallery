@@ -246,8 +246,7 @@ button { cursor: pointer; font-family: var(--font-body); }
     font-size: .85rem;
     font-weight: 600;
     color: var(--gold);
-    letter-spacing: .04em;
-    text-transform: uppercase;
+    letter-spacing: .02em;
 }
 
 .col-header__back:hover { text-decoration: underline; }
