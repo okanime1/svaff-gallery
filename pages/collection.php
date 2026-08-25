@@ -88,13 +88,21 @@ require GALLERY_ROOT . '/shared/inc/nav.php';
                 data-src="<?= htmlspecialchars($url) ?>"
                 type="button"
             >
+                <?php if ($eager): ?>
                 <img
-                    <?= $eager ? 'src' : 'data-src' ?>="<?= htmlspecialchars($url) ?>"
-                    <?php if (!$eager): ?>src=""<?php endif; ?>
+                    src="<?= htmlspecialchars($url) ?>"
                     alt="<?= htmlspecialchars($col_label . ' photo ' . ($i + 1)) ?>"
-                    loading="<?= $eager ? 'eager' : 'lazy' ?>"
+                    loading="eager"
                     decoding="async"
                 >
+                <?php else: ?>
+                <img
+                    data-src="<?= htmlspecialchars($url) ?>"
+                    alt="<?= htmlspecialchars($col_label . ' photo ' . ($i + 1)) ?>"
+                    class="lazy"
+                    decoding="async"
+                >
+                <?php endif; ?>
             </button>
             <?php endforeach; ?>
         </div>

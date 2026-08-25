@@ -17,11 +17,15 @@
                     if (img) {
                         img.src = img.dataset.src;
                         img.removeAttribute('data-src');
+                        img.classList.remove('lazy');
+                        img.addEventListener('load', function () {
+                            img.style.opacity = '1';
+                        }, { once: true });
                     }
                     thumbObs.unobserve(entry.target);
                 }
             });
-        }, { rootMargin: '400px' });
+        }, { rootMargin: '600px' });
 
         document.querySelectorAll('.col-thumb img[data-src]').forEach(function (img) {
             thumbObs.observe(img.parentElement);
@@ -30,6 +34,7 @@
         // Fallback: load all immediately
         document.querySelectorAll('.col-thumb img[data-src]').forEach(function (img) {
             img.src = img.dataset.src;
+            img.classList.remove('lazy');
         });
     }
 

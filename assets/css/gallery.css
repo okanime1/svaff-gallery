@@ -282,7 +282,12 @@ button { cursor: pointer; font-family: var(--font-body); }
     object-fit: cover;
     object-position: center top;
     display: block;
-    transition: transform .3s ease, opacity .2s;
+    transition: transform .3s ease, opacity .3s;
+}
+
+/* Hide broken-icon state for lazy-loaded images not yet swapped in */
+.col-thumb img.lazy {
+    opacity: 0;
 }
 
 .col-thumb:hover img {
