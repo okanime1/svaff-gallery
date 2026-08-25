@@ -29,11 +29,10 @@ jobs:
             --exclude='.github' \
             --exclude='assets/photos' \
             --exclude='inc/cache' \
-            --exclude='shared' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
             ./ "$USER@$HOST:$DEPLOY_PATH/"
 
-      - name: Copy shared inc (nav/head/footer)
+      - name: Bust scanner cache
         env:
           SSH_PRIVATE_KEY: ${{ secrets.GALLERY_SSH_PRIVATE_KEY }}
           HOST: gallery.svaff.org
@@ -42,10 +41,4 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             "$USER@$HOST" \
-            "mkdir -p $DEPLOY_PATH/shared/inc && \
-             cp /home/svaff/svaff-shared/inc/head.php   $DEPLOY_PATH/shared/inc/ && \
-             cp /home/svaff/svaff-shared/inc/nav.php    $DEPLOY_PATH/shared/inc/ && \
-             cp /home/svaff/svaff-shared/inc/footer.php $DEPLOY_PATH/shared/inc/ && \
-             mkdir -p $DEPLOY_PATH/inc/cache && \
-             rm -f $DEPLOY_PATH/inc/cache/gallery_index.json && \
-             echo 'Deploy complete'"
+            "rm -f $DEPLOY_PATH/inc/cache/gallery_index.json && echo 'Cache cleared'"
