@@ -31,3 +31,4 @@ If a photographer folder contains images directly (no subdir), it renders as a s
 Push to `main` → GitHub Actions → rsync to server (excludes `assets/photos` and `inc/cache`).
 
 **Required GitHub Secret:** `GALLERY_SSH_PRIVATE_KEY` — SSH key for `svaff-gallery@gallery.svaff.org`.
+<!-- deployed Tue Aug 25 10:49:41 PM UTC 2026 -->
