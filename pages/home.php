@@ -33,6 +33,7 @@ require GALLERY_ROOT . '/shared/inc/nav.php';
         <div class="gallery-index__inner">
 
             <?php foreach ($gallery as $year => $photographers): ?>
+            <?php $year = (string)$year; ?>
             <div class="gallery-year" id="year-<?= htmlspecialchars($year) ?>">
                 <h2 class="gallery-year__heading"><?= htmlspecialchars($year) ?></h2>
 
