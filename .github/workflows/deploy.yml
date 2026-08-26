@@ -42,3 +42,33 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             "$USER@$HOST" \
             "rm -f $DEPLOY_PATH/inc/cache/gallery_index.json && echo 'Cache cleared'"
+
+      - name: Sync shared brand assets from svaff.org
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GALLERY_SSH_PRIVATE_KEY }}
+          HOST: gallery.svaff.org
+          USER: svaff-gallery
+          DEPLOY_PATH: /home/svaff-gallery/htdocs/gallery.svaff.org
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$USER@$HOST" bash << 'ENDSSH'
+            set -e
+            BASE="$DEPLOY_PATH"
+            mkdir -p "$BASE/assets/css" "$BASE/assets/js" "$BASE/assets/logos" "$BASE/assets/favicons"
+
+            # Brand CSS + JS
+            wget -qO "$BASE/assets/css/brand-mesh.css"  https://svaff.org/assets/css/brand-mesh.css
+            wget -qO "$BASE/assets/css/pages.css"        https://svaff.org/assets/css/pages.css
+            wget -qO "$BASE/assets/js/motion.js"         https://svaff.org/assets/js/motion.js
+
+            # Logos
+            wget -qO "$BASE/assets/logos/svaff-logo-dark-bg.svg"  https://svaff.org/assets/logos/svaff-logo-dark-bg.svg
+            wget -qO "$BASE/assets/logos/svaff-logo-light-bg.svg" https://svaff.org/assets/logos/svaff-logo-light-bg.svg
+            wget -qO "$BASE/assets/logos/svaff-logo-icon.svg"      https://svaff.org/assets/logos/svaff-logo-icon.svg
+
+            # Favicons
+            wget -qO "$BASE/assets/favicons/favicon-32x32.png"    https://svaff.org/assets/favicons/favicon-32x32.png
+            wget -qO "$BASE/assets/favicons/apple-touch-icon.png"  https://svaff.org/assets/favicons/apple-touch-icon.png
+            wget -qO "$BASE/assets/favicons/site.webmanifest"      https://svaff.org/assets/favicons/site.webmanifest
+
+            echo "Shared brand assets synced."
+          ENDSSH
